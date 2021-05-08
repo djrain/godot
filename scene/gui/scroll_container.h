@@ -61,6 +61,8 @@ class ScrollContainer : public Container {
 	bool scroll_h;
 	bool scroll_v;
 
+	bool up_down_h_scroll;
+
 	int deadzone;
 	bool follow_focus;
 
@@ -87,6 +89,9 @@ public:
 
 	void set_enable_h_scroll(bool p_enable);
 	bool is_h_scroll_enabled() const;
+
+	void set_up_down_h_scroll(bool p_enable);
+	bool is_up_down_h_scroll_enabled() const;
 
 	void set_enable_v_scroll(bool p_enable);
 	bool is_v_scroll_enabled() const;

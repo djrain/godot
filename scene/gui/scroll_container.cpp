@@ -98,7 +98,7 @@ void ScrollContainer::_gui_input(const Ref<InputEvent> &p_gui_input) {
 
 		if (mb->get_button_index() == BUTTON_WHEEL_UP && mb->is_pressed()) {
 			// only horizontal is enabled, scroll horizontally
-			if (h_scroll->is_visible() && (!v_scroll->is_visible() || mb->get_shift())) {
+			if (h_scroll->is_visible() && ((!v_scroll->is_visible() && up_down_h_scroll) || mb->get_shift())) {
 				h_scroll->set_value(h_scroll->get_value() - h_scroll->get_page() / 8 * mb->get_factor());
 			} else if (v_scroll->is_visible_in_tree()) {
 				v_scroll->set_value(v_scroll->get_value() - v_scroll->get_page() / 8 * mb->get_factor());
@@ -107,7 +107,7 @@ void ScrollContainer::_gui_input(const Ref<InputEvent> &p_gui_input) {
 
 		if (mb->get_button_index() == BUTTON_WHEEL_DOWN && mb->is_pressed()) {
 			// only horizontal is enabled, scroll horizontally
-			if (h_scroll->is_visible() && (!v_scroll->is_visible() || mb->get_shift())) {
+			if (h_scroll->is_visible() && ((!v_scroll->is_visible() && up_down_h_scroll) || mb->get_shift())) {
 				h_scroll->set_value(h_scroll->get_value() + h_scroll->get_page() / 8 * mb->get_factor());
 			} else if (v_scroll->is_visible()) {
 				v_scroll->set_value(v_scroll->get_value() + v_scroll->get_page() / 8 * mb->get_factor());
@@ -484,6 +484,17 @@ bool ScrollContainer::is_h_scroll_enabled() const {
 	return scroll_h;
 }
 
+void ScrollContainer::set_up_down_h_scroll(bool p_enable) {
+
+	up_down_h_scroll = p_enable;
+
+}
+
+bool ScrollContainer::is_up_down_h_scroll_enabled() const {
+
+	return up_down_h_scroll;
+}
+
 void ScrollContainer::set_enable_v_scroll(bool p_enable) {
 	if (scroll_v == p_enable) {
 		return;
@@ -603,6 +614,7 @@ void ScrollContainer::_bind_methods() {
 
 	ADD_GROUP("Scroll", "scroll_");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "scroll_horizontal_enabled"), "set_enable_h_scroll", "is_h_scroll_enabled");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "up/down_horizontal_scroll_enabled"), "set_up_down_h_scroll", "is_up_down_h_scroll_enabled");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "scroll_horizontal"), "set_h_scroll", "get_h_scroll");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "scroll_vertical_enabled"), "set_enable_v_scroll", "is_v_scroll_enabled");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "scroll_vertical"), "set_v_scroll", "get_v_scroll");
@@ -629,6 +641,7 @@ ScrollContainer::ScrollContainer() {
 	beyond_deadzone = false;
 	scroll_h = true;
 	scroll_v = true;
+	up_down_h_scroll = true;
 
 	deadzone = GLOBAL_GET("gui/common/default_scroll_deadzone");
 	follow_focus = false;
